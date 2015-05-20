@@ -15,6 +15,9 @@
 (set-keyboard-coding-system 'utf-8)
 (prefer-coding-system 'utf-8)
 
+;; magit, cl
+(require 'cl-lib)
+
 ;; Useful key strokes
 (global-set-key "\M-g" 'goto-line)
 (global-set-key "\M-d" 'delete-region)
