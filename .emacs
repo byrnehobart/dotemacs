@@ -22,6 +22,7 @@
 (global-set-key "\M-g" 'goto-line)
 (global-set-key "\M-d" 'delete-region)
 (global-set-key "\C-cp" 'replace-string)
+(defalias 'qrr 'query-replace-regexp)
 
 ;; Frame title : set to buffer name and uniquify
 (setq frame-title-format "Emacs - %f ")
@@ -80,9 +81,9 @@
 ;; markdown
 					
 (require 'markdown-mode)
-(add-to-list 'auto-mode-alist
-	     '("\\.mdt\\'" . markdown-mode)
-	     '("\\.md\\'" . markdown-mode))
+(add-to-list 'auto-mode-alist '("\\.mdt\\'" . markdown-mode))
+(add-to-list 'auto-mode-alist '("\\.md\\'" . markdown-mode))
+(add-to-list 'auto-mode-alist '("\\.markdown\\'" . markdown-mode))
 (add-hook 'markdown-mode-hook 'visual-line-mode)
 (setq markdown-command "/anaconda/bin/markdown_py")
 
@@ -114,3 +115,36 @@
  python-shell-completion-string-code
  "';'.join(get_ipython().Completer.all_completions('''%s'''))\n")
 
+;; Yaml
+(add-to-list 'auto-mode-alist '("\\.yml$" . yaml-mode))
+
+(global-set-key "\C-c\C-b" 'browse-url-at-point)
+
+;; New stuff for .js, node
+
+(ac-config-default)
+(add-hook 'js-mode-hook 'js2-minor-mode)
+(add-hook 'js2-mode-hook 'ac-js2-mode)
+(setq js2-highlight-level 3)
+(add-to-list 'auto-mode-alist '("\\.json$" . js-mode))
+;; getting a "void variable" error for js-mode-map
+;;(define-key js-mode-map "{" 'paredit-open-curly)
+;;(define-key js-mode-map "}" 'paredit-close-curly-and-newline)
+(eval-after-load 'js-mode
+  '(define-key js-mode-map "{" 'paredit-open-curly))
+(eval-after-load 'js-mode
+  '(define-key js-mode-map "}" 'paredit-close-curly-and-newline))
+
+(add-to-list 'load-path "~/.emacs.d/elpa/js-comint-20080530.757/")
+(require 'js-comint)
+(setq inferior-js-program-command "node")
+ 
+(setq inferior-js-mode-hook
+      (lambda ()
+        ;; We like nice colors
+        (ansi-color-for-comint-mode-on)
+        ;; Deal with some prompt nonsense
+        (add-to-list
+         'comint-preoutput-filter-functions
+         (lambda (output)
+	   (replace-regexp-in-string "\033\\[[0-9]+[A-Z]" "" output)))))
