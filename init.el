@@ -106,3 +106,9 @@
  python-shell-completion-string-code
  "';'.join(get_ipython().Completer.all_completions('''%s'''))\n")
 (setenv "LC_CTYPE" "UTF-8") ;; necesary for showing some strings in *shell* buffs
+
+;; Lisp
+
+(add-to-list 'load-path "~/site-lisp/slime/")
+(require 'slime-autoloads)
+(setq inferior-lisp-program "sbcl")
