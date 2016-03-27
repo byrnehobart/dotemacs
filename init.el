@@ -7,22 +7,18 @@
 (column-number-mode 1)
 (set-cursor-color     "red")
 
-(add-to-list 'load-path "~/site-lisp/") ;; many useful things live here.
-;(require 'idle-highlight-mode)
+(add-to-list 'load-path "~/site-lisp") ;; many useful things live here.
+(require 'idle-highlight-mode)
 
 ;; Set encoding to UTF-8
 (set-terminal-coding-system 'utf-8)
 (set-keyboard-coding-system 'utf-8)
 (prefer-coding-system 'utf-8)
 
-;; magit, cl
-(require 'cl-lib)
-
 ;; Useful key strokes
 (global-set-key "\M-g" 'goto-line)
 (global-set-key "\M-d" 'delete-region)
 (global-set-key "\C-cp" 'replace-string)
-(defalias 'qrr 'query-replace-regexp)
 
 ;; Frame title : set to buffer name and uniquify
 (setq frame-title-format "Emacs - %f ")
@@ -81,32 +77,25 @@
 ;; markdown
 					
 (require 'markdown-mode)
-(add-to-list 'auto-mode-alist '("\\.mdt\\'" . markdown-mode))
-(add-to-list 'auto-mode-alist '("\\.md\\'" . markdown-mode))
-(add-to-list 'auto-mode-alist '("\\.markdown\\'" . markdown-mode))
+(add-to-list 'auto-mode-alist
+	     '("\\.mdt\\'" . markdown-mode)
+	     '("\\.md\\'" . markdown-mode))
 (add-hook 'markdown-mode-hook 'visual-line-mode)
 (setq markdown-command "/anaconda/bin/markdown_py")
 
+;; shell
+(when (memq window-system '(mac ns))
+  (exec-path-from-shell-initialize))
+
 ;; packages
 (require 'package) 
-(setq package-archives '(("marmalade" . "http://marmalade-repo.org/packages/")
-			 ("gnu" . "http://elpa.gnu.org/packages/")
-			 ("melpa" . "http://melpa.milkbox.net/packages/")))
-(package-initialize)
-
-
-
-;; shell
-;(add-to-list 'load-path "~/site-lisp/exec-path-from-shell/")
-;(require 'exec-path-from-shell)
-;(when (memq window-system '(mac ns))
-;  (exec-path-from-shell-initialize))
-
-
+(add-to-list 'package-archives
+             '("melpa" . "http://melpa.org/packages/") t)
+(package-initialize) 
 
 ;; python
 (setq
- python-shell-interpreter "/Library/Frameworks/Python.framework/Versions/3.5/bin/ipython3"
+ python-shell-interpreter "ipython"
  python-shell-interpreter-args ""
  python-shell-prompt-regexp "In \\[[0-9]+\\]: "
  python-shell-prompt-output-regexp "Out\\[[0-9]+\\]: "
@@ -116,46 +105,10 @@
    "';'.join(module_completion('''%s'''))\n"
  python-shell-completion-string-code
  "';'.join(get_ipython().Completer.all_completions('''%s'''))\n")
+(setenv "LC_CTYPE" "UTF-8") ;; necesary for showing some strings in *shell* buffs
 
-<<<<<<< HEAD
+;; Lisp
 
-
-;; Slime!
-
-(setq inferior-lisp-program "/usr/local/bin/sbcl")
-(setq slime-contribs '(slime-fancy))
-=======
-;; Yaml
-(add-to-list 'auto-mode-alist '("\\.yml$" . yaml-mode))
-
-(global-set-key "\C-c\C-b" 'browse-url-at-point)
-
-;; New stuff for .js, node
-
-(ac-config-default)
-(add-hook 'js-mode-hook 'js2-minor-mode)
-(add-hook 'js2-mode-hook 'ac-js2-mode)
-(setq js2-highlight-level 3)
-(add-to-list 'auto-mode-alist '("\\.json$" . js-mode))
-;; getting a "void variable" error for js-mode-map
-;;(define-key js-mode-map "{" 'paredit-open-curly)
-;;(define-key js-mode-map "}" 'paredit-close-curly-and-newline)
-(eval-after-load 'js-mode
-  '(define-key js-mode-map "{" 'paredit-open-curly))
-(eval-after-load 'js-mode
-  '(define-key js-mode-map "}" 'paredit-close-curly-and-newline))
-
-(add-to-list 'load-path "~/.emacs.d/elpa/js-comint-20080530.757/")
-(require 'js-comint)
-(setq inferior-js-program-command "node")
- 
-(setq inferior-js-mode-hook
-      (lambda ()
-        ;; We like nice colors
-        (ansi-color-for-comint-mode-on)
-        ;; Deal with some prompt nonsense
-        (add-to-list
-         'comint-preoutput-filter-functions
-         (lambda (output)
-	   (replace-regexp-in-string "\033\\[[0-9]+[A-Z]" "" output)))))
->>>>>>> d877353338ca0e4bfdd0695deb96ecdb6c1ceab0
+(add-to-list 'load-path "~/site-lisp/slime/")
+(require 'slime-autoloads)
+(setq inferior-lisp-program "sbcl")
