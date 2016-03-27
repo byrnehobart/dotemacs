@@ -8,7 +8,7 @@
 (set-cursor-color     "red")
 
 (add-to-list 'load-path "~/site-lisp/") ;; many useful things live here.
-(require 'idle-highlight-mode)
+;(require 'idle-highlight-mode)
 
 ;; Set encoding to UTF-8
 (set-terminal-coding-system 'utf-8)
@@ -88,22 +88,24 @@
 
 ;; packages
 (require 'package) 
-(add-to-list 'package-archives
-             '("melpa" . "http://melpa.org/packages/") t)
+(setq package-archives '(("marmalade" . "http://marmalade-repo.org/packages/")
+			 ("gnu" . "http://elpa.gnu.org/packages/")
+			 ("melpa" . "http://melpa.milkbox.net/packages/")))
 (package-initialize)
 
 
+
 ;; shell
-(add-to-list 'load-path "~/site-lisp/exec-path-from-shell/")
-(require 'exec-path-from-shell)
-(when (memq window-system '(mac ns))
-  (exec-path-from-shell-initialize))
+;(add-to-list 'load-path "~/site-lisp/exec-path-from-shell/")
+;(require 'exec-path-from-shell)
+;(when (memq window-system '(mac ns))
+;  (exec-path-from-shell-initialize))
 
 
 
 ;; python
 (setq
- python-shell-interpreter "ipython"
+ python-shell-interpreter "/Library/Frameworks/Python.framework/Versions/3.5/bin/ipython3"
  python-shell-interpreter-args ""
  python-shell-prompt-regexp "In \\[[0-9]+\\]: "
  python-shell-prompt-output-regexp "Out\\[[0-9]+\\]: "
@@ -114,3 +116,9 @@
  python-shell-completion-string-code
  "';'.join(get_ipython().Completer.all_completions('''%s'''))\n")
 
+
+
+;; Slime!
+
+(setq inferior-lisp-program "/usr/local/bin/sbcl")
+(setq slime-contribs '(slime-fancy))
