@@ -117,14 +117,15 @@
  python-shell-completion-string-code
  "';'.join(get_ipython().Completer.all_completions('''%s'''))\n")
 
-<<<<<<< HEAD
+(add-hook 'python-mode-hook 'jedi:setup)
+(setq jedi:complete-on-dot t)
 
 
 ;; Slime!
 
 (setq inferior-lisp-program "/usr/local/bin/sbcl")
 (setq slime-contribs '(slime-fancy))
-=======
+
 ;; Yaml
 (add-to-list 'auto-mode-alist '("\\.yml$" . yaml-mode))
 
@@ -145,7 +146,7 @@
 (eval-after-load 'js-mode
   '(define-key js-mode-map "}" 'paredit-close-curly-and-newline))
 
-(add-to-list 'load-path "~/.emacs.d/elpa/js-comint-20080530.757/")
+;(add-to-list 'load-path "~/.emacs.d/elpa/js-comint-20080530.757/")
 (require 'js-comint)
 (setq inferior-js-program-command "node")
  
@@ -158,4 +159,3 @@
          'comint-preoutput-filter-functions
          (lambda (output)
 	   (replace-regexp-in-string "\033\\[[0-9]+[A-Z]" "" output)))))
->>>>>>> d877353338ca0e4bfdd0695deb96ecdb6c1ceab0
